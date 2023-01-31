@@ -9,7 +9,7 @@ namespace MedicamentContext
 {
     public class MedicamentFile : TextFile
     {
-        private List<DataMedicament>? Elements;
+        public List<DataMedicament>? Elements { get; set; }
         public MedicamentFile(string path) : base(path)
         {
             Elements = new List<DataMedicament>();
@@ -24,7 +24,7 @@ namespace MedicamentContext
             try
             {
 
-                while (Sr.EndOfStream)
+                while (!Sr.EndOfStream)
                 {
                     line = Sr?.ReadLine();
 

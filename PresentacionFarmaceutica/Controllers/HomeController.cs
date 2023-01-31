@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MedicamentContext;
+using Microsoft.AspNetCore.Mvc;
 using PresentacionFarmaceutica.Models;
 using System.Diagnostics;
 
@@ -15,6 +16,21 @@ namespace PresentacionFarmaceutica.Controllers
 
         public IActionResult Index()
         {
+
+            MedicamentFile medicamentFile = new(@"C:\Users\MSI-PRO\Downloads\Prueba Desarollador\Prueba Desarollador\Prueba Desarollador\Medicamentos.txt");
+            medicamentFile.Read();
+
+            PharmaceuticalFormFile  pharmaceuticalFormFile = new(@"C:\Users\MSI-PRO\Downloads\Prueba Desarollador\Prueba Desarollador\Prueba Desarollador\FormaFarmaceutica.txt");
+            pharmaceuticalFormFile.Read();
+
+            List<DataMedicament> medicaments = new();
+            medicaments = medicamentFile.Elements;
+
+            List<DataPharmaceuticalForm> pharmaceuticalForms = new();
+            pharmaceuticalForms = pharmaceuticalFormFile.Elements;
+
+
+
             return View();
         }
 
@@ -22,6 +38,10 @@ namespace PresentacionFarmaceutica.Controllers
         {
             return View();
         }
+
+
+
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
