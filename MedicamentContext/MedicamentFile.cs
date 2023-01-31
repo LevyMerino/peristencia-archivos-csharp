@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -53,9 +55,7 @@ namespace MedicamentContext
                             }
                         }
                     }
-
                 }
-
 
                 return "Ok";
             }
@@ -68,6 +68,61 @@ namespace MedicamentContext
                 CloseReading();
             }
         }
+
+
+        public DataMedicament ReadItem(int id)
+        {
+
+            OpenReading();
+
+            String? line;
+
+            DataMedicament dataMedicament = new();
+       
+            try
+            {
+
+                while (!Sr.EndOfStream)
+                {
+                    line = Sr?.ReadLine();
+
+                    if (line is not null)
+                    {
+                        if (!line.Contains("|NOMBRE|"))
+                        {
+
+                            var dataLine = line?.Split('|');
+
+                            if (dataLine is not null)
+                            {
+                                if (int.Parse(dataLine[0]) == id)
+                                {
+                                    dataMedicament.Id = int.Parse(dataLine[0]);
+                                    dataMedicament.Nombre = dataLine[1];
+                                    dataMedicament.Concentracion = dataLine[2];
+                                    dataMedicament.IdFormaFamamaceutica = int.Parse(dataLine[3]);
+                                    dataMedicament.Precio = float.Parse(dataLine[4]);
+                                    dataMedicament.Stock = int.Parse(dataLine[5]);
+                                    dataMedicament.Presentacion = dataLine[6];
+                                    dataMedicament.Habilitado = int.Parse(dataLine[7]);
+                                }                             
+                            }
+                        }
+                    }
+                }
+
+                return dataMedicament;
+            }
+            catch (Exception)
+            {
+                return dataMedicament;
+            }
+            finally
+            {
+                CloseReading();
+            }
+        }
+
 
         public string White()
         {
@@ -138,5 +193,28 @@ namespace MedicamentContext
             White();
         }
 
+        public IEnumerable JoinFile(List<DataMedicament> medicaments, List<DataPharmaceuticalForm> pharmaceuticalForms)
+        {
+            var presentation = from m in medicaments
+                               join p in pharmaceuticalForms
+                               on m.IdFormaFamamaceutica equals p.Id
+                               select new
+                               {
+                                   Id = m.Id,
+                                   Nombre = m.Nombre,
+                                   Concentracion = m.Concentracion,
+                                   FormaFamamaceutica = p.Nombre,
+                                   Precio = m.Precio,
+                                   Stock = m.Stock,
+                                   Presentacion = m.Presentacion,
+                                   Habilitado = m.Habilitado,
+         
+                               
+                               };
+
+            return presentation;
+
+        }
+            
     }
 }

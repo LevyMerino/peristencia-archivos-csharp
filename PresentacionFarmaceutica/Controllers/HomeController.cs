@@ -20,42 +20,58 @@ namespace PresentacionFarmaceutica.Controllers
             MedicamentFile medicamentFile = new(@"C:\Users\MSI-PRO\Downloads\Prueba Desarollador\Prueba Desarollador\Prueba Desarollador\Medicamentos.txt");
             medicamentFile.Read();
 
-            PharmaceuticalFormFile  pharmaceuticalFormFile = new(@"C:\Users\MSI-PRO\Downloads\Prueba Desarollador\Prueba Desarollador\Prueba Desarollador\FormaFarmaceutica.txt");
+            PharmaceuticalFormFile pharmaceuticalFormFile = new(@"C:\Users\MSI-PRO\Downloads\Prueba Desarollador\Prueba Desarollador\Prueba Desarollador\FormaFarmaceutica.txt");
             pharmaceuticalFormFile.Read();
 
-            List<DataMedicament> medicaments = new();
-            medicaments = medicamentFile.Elements;
+            List<DataMedicament>? medicaments = medicamentFile.Elements;
 
-            List<DataPharmaceuticalForm> pharmaceuticalForms = new();
-            pharmaceuticalForms = pharmaceuticalFormFile.Elements;
-
-            //List<PresentationMedicament> presentations = new();
+            List<DataPharmaceuticalForm>? pharmaceuticalForms = pharmaceuticalFormFile.Elements;
 
             var presentation = from m in medicaments
-                            join p in pharmaceuticalForms
-                            on m.IdFormaFamamaceutica equals p.Id
-                            select new
-                            {
-                                Id = m.Id,
-                                Nombre = m.Nombre,
-                                Concentracion = m.Concentracion,
-                                FormaFamamaceutica = p.Nombre,
-                                Precio = m.Precio,
-                                Stock = m.Stock,
-                                Presentacion = m.Presentacion,
-                                Habilitado = m.Habilitado,
-                            };
+                               join p in pharmaceuticalForms
+                               on m.IdFormaFamamaceutica equals p.Id
+                               select new
+                               {
+                                   Id = m.Id,
+                                   Nombre = m.Nombre,
+                                   Concentracion = m.Concentracion,
+                                   FormaFamamaceutica = p.Nombre,
+                                   Precio = m.Precio,
+                                   Stock = m.Stock,
+                                   Presentacion = m.Presentacion,
+                                   Habilitado = m.Habilitado,
+                               };
 
             return View(presentation);
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            MedicamentFile medicamentFile = new(@"C:\Users\MSI-PRO\Downloads\Prueba Desarollador\Prueba Desarollador\Prueba Desarollador\Medicamentos.txt");
+            DataMedicament medicament = medicamentFile.ReadItem(id);
+
+            PharmaceuticalFormFile pharmaceuticalFormFile = new(@"C:\Users\MSI-PRO\Downloads\Prueba Desarollador\Prueba Desarollador\Prueba Desarollador\FormaFarmaceutica.txt");
+            pharmaceuticalFormFile.Read();
+            List<DataPharmaceuticalForm>? pharmaceuticalForms = pharmaceuticalFormFile.Elements;
+
+            PresentationEditMedicament presentationEditMedicament = new();
+
+            presentationEditMedicament.medicaments.Add(medicament);
+            presentationEditMedicament.pharmaceuticalForms = pharmaceuticalForms;
+
+            return View(presentationEditMedicament);
+        }
+
+        public IActionResult Delete()
+        {
+            return View();
         }
 
         public IActionResult Privacy()
         {
             return View();
         }
-
-
-
 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
