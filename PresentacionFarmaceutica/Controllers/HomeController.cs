@@ -29,9 +29,24 @@ namespace PresentacionFarmaceutica.Controllers
             List<DataPharmaceuticalForm> pharmaceuticalForms = new();
             pharmaceuticalForms = pharmaceuticalFormFile.Elements;
 
+            //List<PresentationMedicament> presentations = new();
 
+            var presentation = from m in medicaments
+                            join p in pharmaceuticalForms
+                            on m.IdFormaFamamaceutica equals p.Id
+                            select new
+                            {
+                                Id = m.Id,
+                                Nombre = m.Nombre,
+                                Concentracion = m.Concentracion,
+                                FormaFamamaceutica = p.Nombre,
+                                Precio = m.Precio,
+                                Stock = m.Stock,
+                                Presentacion = m.Presentacion,
+                                Habilitado = m.Habilitado,
+                            };
 
-            return View();
+            return View(presentation);
         }
 
         public IActionResult Privacy()
