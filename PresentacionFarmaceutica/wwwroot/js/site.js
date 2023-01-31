@@ -2,3 +2,43 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
+
+
+function submitEdit(id) {
+
+    const form = document.querySelector("#editForm")
+
+    const data = {
+
+        Id: id,
+        Nombre: form.nombre.value,
+        Concentracion: form.concentracion.value,
+        IdFormaFamamaceutica: form.formaFarmaceutica.value,
+        Precio: form.precio.value,
+        Stock: form.stock.value,
+        Presentacion: form.presentacion.value,
+        Habilitado: form.habilitado.value,
+
+    }
+
+    debugger;
+
+
+    $.ajax({
+        url: '/Home/EditFile',
+        type: 'PUT',
+        dataType: 'json',
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        success: function () {
+
+        },
+        error: function () {
+
+        },
+        complete: function () {
+
+        }
+    });
+
+}

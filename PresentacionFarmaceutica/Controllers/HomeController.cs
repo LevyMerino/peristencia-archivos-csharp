@@ -63,6 +63,30 @@ namespace PresentacionFarmaceutica.Controllers
             return View(presentationEditMedicament);
         }
 
+
+        [HttpPut]
+        public IActionResult EditFile([FromBody] DtoMedicaments dto)
+        {
+
+            MedicamentFile medicamentFile = new(@"C:\Users\MSI-PRO\Downloads\Prueba Desarollador\Prueba Desarollador\Prueba Desarollador\Medicamentos.txt");
+
+            DataMedicament mediicament = new()
+            {
+                Id = dto.Id,
+                Nombre = dto.Nombre,
+                Concentracion = dto.Concentracion,
+                IdFormaFamamaceutica = dto.IdFormaFamamaceutica,
+                Precio = dto.Precio,
+                Stock = dto.Stock,
+                Presentacion = dto.Presentacion,
+                Habilitado = dto.Habilitado
+            };
+
+            medicamentFile.Editar(dto.Id, mediicament);
+
+            return Json("Ok");
+        }
+
         public IActionResult Delete()
         {
             return View();
