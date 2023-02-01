@@ -1,0 +1,56 @@
+﻿@{
+    ViewData["Title"] = "Crear";
+}
+
+
+<div>
+    <div class="text-center">
+        <h1 class="display-4">Crear</h1>
+    </div>
+
+    <form id="createForm">
+        <div class="form-group">
+            <label for="nombre">Nombre</label>
+            <input type="text" class="form-control" id="nombre" placeholder="">
+        </div>
+        <div class="form-group">
+            <label for="concentracion">Concentración</label>
+            <input type="text" class="form-control" id="concentracion" placeholder="">
+        </div>
+        <div class="form-group">
+            <label for="formaFarmaceutica">Forma farmaceutica</label>
+            <select class="form-control" id="formaFarmaceutica">
+                @if (Model is not null)
+                {
+                    @foreach (var item in Model)
+                    {
+                        <option value="@item.Id">@item.Id @item.Nombre</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="precio">Precio</label>
+            <input type="text" class="form-control" id="precio" placeholder="">
+        </div>
+        <div class="form-group">
+            <label for="stock">Stock</label>
+            <input type="text" class="form-control" id="stock" placeholder="">
+        </div>
+        <div class="form-group">
+            <label for="presentacion">Presentación</label>
+            <input type="text" class="form-control" id="presentacion" placeholder="">
+        </div>
+        <div class="form-group">
+            <label for="habilitado">Habilitado</label>
+            <select class="form-control" id="habilitado">
+                <option selected value=0>No</option>
+                <option value=1>Si</option>
+            </select>
+        </div>
+        <div>
+            <a class="btn btn-secondary my-3" href="@Url.Action("Index", "Home")" role="button">Regresar</a>
+            <button class="btn btn-primary" onclick="submitCreate()">Crear</button>
+        </div>
+    </form>
+</div>

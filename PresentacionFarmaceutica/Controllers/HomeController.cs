@@ -46,7 +46,7 @@ namespace PresentacionFarmaceutica.Controllers
         }
 
         [HttpGet]
-        public IActionResult Edit(int id)
+        public IActionResult EditView(int id)
         {
             MedicamentFile medicamentFile = new(@"C:\Users\MSI-PRO\Downloads\Prueba Desarollador\Prueba Desarollador\Prueba Desarollador\Medicamentos.txt");
             DataMedicament medicament = medicamentFile.ReadItem(id);
@@ -60,12 +60,12 @@ namespace PresentacionFarmaceutica.Controllers
             presentationEditMedicament.medicaments.Add(medicament);
             presentationEditMedicament.pharmaceuticalForms = pharmaceuticalForms;
 
-            return View(presentationEditMedicament);
+            return View("Edit",presentationEditMedicament);
         }
 
 
         [HttpPut]
-        public IActionResult EditFile([FromBody] DtoMedicaments dto)
+        public IActionResult EditItem([FromBody] DtoMedicaments dto)
         {
 
             MedicamentFile medicamentFile = new(@"C:\Users\MSI-PRO\Downloads\Prueba Desarollador\Prueba Desarollador\Prueba Desarollador\Medicamentos.txt");
@@ -87,9 +87,46 @@ namespace PresentacionFarmaceutica.Controllers
             return Json("Ok");
         }
 
-        public IActionResult Delete()
+        [HttpGet]
+        public IActionResult CreateView()
         {
-            return View();
+            PharmaceuticalFormFile pharmaceuticalFormFile = new(@"C:\Users\MSI-PRO\Downloads\Prueba Desarollador\Prueba Desarollador\Prueba Desarollador\FormaFarmaceutica.txt");
+            pharmaceuticalFormFile.Read();
+            List<DataPharmaceuticalForm>? pharmaceuticalForms = pharmaceuticalFormFile.Elements;
+
+            return View("Create",pharmaceuticalForms);
+        }
+
+
+        [HttpPost]
+        public IActionResult CreateItem([FromBody] DtoMedicaments dto)
+        {
+
+            MedicamentFile medicamentFile = new(@"C:\Users\MSI-PRO\Downloads\Prueba Desarollador\Prueba Desarollador\Prueba Desarollador\Medicamentos.txt");
+
+            DataMedicament mediicament = new()
+            {
+                Id = dto.Id,
+                Nombre = dto.Nombre,
+                Concentracion = dto.Concentracion,
+                IdFormaFamamaceutica = dto.IdFormaFamamaceutica,
+                Precio = dto.Precio,
+                Stock = dto.Stock,
+                Presentacion = dto.Presentacion,
+                Habilitado = dto.Habilitado
+            };
+
+            medicamentFile.Agregar(mediicament);
+
+            return Json("Ok");
+        }
+
+        [HttpGet]
+        public IActionResult DeleteItem(int id)
+        {
+            MedicamentFile medicamentFile = new(@"C:\Users\MSI-PRO\Downloads\Prueba Desarollador\Prueba Desarollador\Prueba Desarollador\Medicamentos.txt");
+            medicamentFile.Delete(id);
+            return Json("Ok");
         }
 
         public IActionResult Privacy()

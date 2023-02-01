@@ -2,13 +2,24 @@
     ViewData["Title"] = "Inicio";
 }
 
+
+
 <div>
     <div class="text-center">
         <h1 class="display-4">SEPDI</h1>
     </div>
 
-    <a class="btn btn-primary my-3" href="@Url.Action("", "",new{id = 0,origen="memoria"})" role="button">Agregar nuevo</a>
-
+    <div class="row">
+        <div class="col-8">
+            <a class="btn btn-primary my-3" href="@Url.Action("CreateView", "Home")" role="button">Agregar nuevo</a>
+        </div>
+        <div class="col-4">
+            <div class="input-group">
+                <input type="search" class="form-control rounded" placeholder="Puedes filtrar por nombre, presentación, concentración" aria-label="Search" aria-describedby="search-addon" />
+                <button type="button" class="btn btn-outline-primary">Buscar</button>
+            </div>
+        </div>
+    </div>
     <table class="table">
         <thead>
             <tr>
@@ -20,7 +31,7 @@
                 <th scope="col">Stock</th>
                 <th scope="col">Presentación </th>
                 <th scope="col">Habilitado</th>
-                <th scope="col" >Acciones</th>
+                <th scope="col">Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -35,17 +46,19 @@
                     <td>@item.Stock</td>
                     <td>@item.Presentacion</td>
                     @if (@item.Habilitado == 1)
-                    {                        
+                    {
                         <td>Sí</td>
-                    }else{
+                    }
+                    else
+                    {
                         <td>No</td>
                     }
                     <td>
-                        <a class="btn btn-warning btn-sm" href="@Url.Action("Edit", "Home",new{id = @item.Id})" role="button">Editar</a>
-                        <a class="btn btn-danger btn-sm" href="@Url.Action("Delete", "Home",new{id = @item.Id})" role="button">Eliminar</a>
+                        <a class="btn btn-warning btn-sm" href="@Url.Action("EditView", "Home",new{id = @item.Id})" role="button">Editar</a>
+                        @Html.ActionLink("Eliminar", "DeleteItem", new { id = item.Id }, new { @class = "btn btn-danger btn-sm", onclick = "return confirm('¿Estas seguro que deseas eliminar el elemento?');" })
                     </td>
                 </tr>
-            }           
+            }
         </tbody>
     </table>
 </div>

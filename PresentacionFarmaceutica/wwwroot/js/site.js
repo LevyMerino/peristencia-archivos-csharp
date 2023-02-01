@@ -21,12 +21,49 @@ function submitEdit(id) {
 
     }
 
-    debugger;
-
 
     $.ajax({
-        url: '/Home/EditFile',
+        url: '/Home/EditItem',
         type: 'PUT',
+        dataType: 'json',
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        success: function () {
+
+        },
+        error: function () {
+
+        },
+        complete: function () {
+
+        }
+    });
+
+}
+
+function submitCreate() {
+
+
+    const form = document.querySelector("#createForm");
+
+    const data = {
+
+        Id: 0,
+        Nombre: form.nombre.value,
+        Concentracion: form.concentracion.value,
+        IdFormaFamamaceutica: form.formaFarmaceutica.value,
+        Precio: form.precio.value,
+        Stock: form.stock.value,
+        Presentacion: form.presentacion.value,
+        Habilitado: form.habilitado.value,
+
+    }
+
+    debugger;
+
+    $.ajax({
+        url: '/Home/CreateItem',
+        type: 'POST',
         dataType: 'json',
         contentType: "application/json",
         data: JSON.stringify(data),

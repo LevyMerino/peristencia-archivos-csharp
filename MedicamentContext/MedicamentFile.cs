@@ -130,6 +130,7 @@ namespace MedicamentContext
             if (Elements is not null)
             {
                 OpenWriting();
+                Sw?.WriteLine("IIDMEDICAMENTO|NOMBRE|CONCENTRACION|IIDFORMAFARMACEUTICA|PRECIO|STOCK|PRESENTACION|BHABILITADO");
                 foreach (var item in Elements)
                 {
                     Sw?.WriteLine($"{item.Id}|{item.Nombre}|{item.Concentracion}|{item.IdFormaFamamaceutica}" +
@@ -162,7 +163,8 @@ namespace MedicamentContext
 
             if (Elements is not null)
             {
-                Elements.RemoveAt(id - 1);
+                //Elements.RemoveAt(id - 1);
+                Elements.RemoveAll(p => p.Id == id);
             }
 
             White();
