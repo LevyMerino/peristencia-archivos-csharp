@@ -14,7 +14,7 @@ namespace PresentacionFarmaceutica.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string SearchString)
         {
 
             MedicamentFile medicamentFile = new(@"C:\Users\MSI-PRO\Downloads\Prueba Desarollador\Prueba Desarollador\Prueba Desarollador\Medicamentos.txt");
@@ -42,7 +42,51 @@ namespace PresentacionFarmaceutica.Controllers
                                    Habilitado = m.Habilitado,
                                };
 
-            return View(presentation);
+            if (!String.IsNullOrEmpty(SearchString))
+            {
+                presentation = presentation.Where(item => item.Nombre == SearchString);
+            }
+
+            return View(presentation.ToList());
+        }
+
+        [HttpGet]
+        public IActionResult Search(string search)
+        {
+
+            MedicamentFile medicamentFile = new(@"C:\Users\MSI-PRO\Downloads\Prueba Desarollador\Prueba Desarollador\Prueba Desarollador\Medicamentos.txt");
+            medicamentFile.Read();
+
+            PharmaceuticalFormFile pharmaceuticalFormFile = new(@"C:\Users\MSI-PRO\Downloads\Prueba Desarollador\Prueba Desarollador\Prueba Desarollador\FormaFarmaceutica.txt");
+            pharmaceuticalFormFile.Read();
+
+            List<DataMedicament>? medicaments = medicamentFile.Elements;
+
+            List<DataPharmaceuticalForm>? pharmaceuticalForms = pharmaceuticalFormFile.Elements;
+
+            var joinMedicaments = from m in medicaments
+                                  join p in pharmaceuticalForms
+                                  on m.IdFormaFamamaceutica equals p.Id
+                                  select new
+                                  {
+                                      Id = m.Id,
+                                      Nombre = m.Nombre,
+                                      Concentracion = m.Concentracion,
+                                      FormaFamamaceutica = p.Nombre,
+                                      Precio = m.Precio,
+                                      Stock = m.Stock,
+                                      Presentacion = m.Presentacion,
+                                      Habilitado = m.Habilitado,
+                                  };
+
+            var presentation = joinMedicaments.Where
+                (
+                item => item.Nombre == search ||
+                item.Presentacion == search ||
+                item.Concentracion == search
+                );
+
+            return View("Index", presentation);
         }
 
         [HttpGet]
@@ -60,7 +104,7 @@ namespace PresentacionFarmaceutica.Controllers
             presentationEditMedicament.medicaments.Add(medicament);
             presentationEditMedicament.pharmaceuticalForms = pharmaceuticalForms;
 
-            return View("Edit",presentationEditMedicament);
+            return View("Edit", presentationEditMedicament);
         }
 
 
@@ -94,7 +138,7 @@ namespace PresentacionFarmaceutica.Controllers
             pharmaceuticalFormFile.Read();
             List<DataPharmaceuticalForm>? pharmaceuticalForms = pharmaceuticalFormFile.Elements;
 
-            return View("Create",pharmaceuticalForms);
+            return View("Create", pharmaceuticalForms);
         }
 
 

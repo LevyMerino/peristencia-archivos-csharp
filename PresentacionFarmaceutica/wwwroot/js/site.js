@@ -59,8 +59,6 @@ function submitCreate() {
 
     }
 
-    debugger;
-
     $.ajax({
         url: '/Home/CreateItem',
         type: 'POST',
@@ -77,5 +75,24 @@ function submitCreate() {
 
         }
     });
+}
 
+function submitSearch() {
+
+    debugger
+
+    const data = "CETIRIZINA";
+
+    $.ajax({
+        url: '/Home/Index/' + data,
+        success: function () {
+
+        },
+        error: function () {
+
+        },
+        complete: function () {
+
+        }
+    });
 }
