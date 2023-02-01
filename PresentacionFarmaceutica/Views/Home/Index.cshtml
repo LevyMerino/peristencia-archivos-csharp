@@ -10,23 +10,23 @@
     </div>
 
     <form asp-controller="Home" asp-action="Index" method="get">
-        <p>
+@*        <p>
             Title: <input type="text" name="SearchString" />
             <input type="submit" value="Filter" />
-        </p>
-    </form>
-
-    <div class="row">
-        <div class="col-8">
-            <a class="btn btn-primary my-3" href="@Url.Action("CreateView", "Home")" role="button">Agregar nuevo</a>
-        </div>
-        <div class="col-4">
-            <div class="input-group">
-                <input type="search" class="form-control rounded" placeholder="Puedes filtrar por nombre, presentación, concentración" aria-label="Search" aria-describedby="search-addon" />
-                <button type="button" onclick="submitSearch()" class="btn btn-outline-primary">Buscar</button>
+        </p>*@
+        <div class="row">
+            <div class="col-7">
+                <a class="btn btn-primary my-3" href="@Url.Action("CreateView", "Home")" role="button">Agregar nuevo</a>
+            </div>
+            <div class="col-5">
+                <div class="input-group">
+                    <input type="search" class="form-control rounded" name="SearchString" placeholder="Puedes filtrar por nombre, presentación, concentración" aria-label="Search" aria-describedby="search-addon" />
+                    <button type="submit"  class="btn btn-outline-primary">Buscar</button>
+                    <button type="submit"  class="btn btn-outline-secondary">Limpiar</button>
+                </div>
             </div>
         </div>
-    </div>
+    </form>
     <table class="table">
         <thead>
             <tr>
@@ -65,10 +65,10 @@
                     }
                     @if (ViewBag.isLogged)
                     {
-                    <td>
-                        <a class="btn btn-warning btn-sm" href="@Url.Action("EditView", "Home",new{id = @item.Id})" role="button">Editar</a>
-                        @Html.ActionLink("Eliminar", "DeleteItem", new { id = item.Id }, new { @class = "btn btn-danger btn-sm", onclick = "return confirm('¿Estas seguro que deseas eliminar el elemento?');" })
-                    </td>
+                        <td>
+                            <a class="btn btn-warning btn-sm" href="@Url.Action("EditView", "Home",new{id = @item.Id})" role="button">Editar</a>
+                            @Html.ActionLink("Eliminar", "DeleteItem", new { id = item.Id }, new { @class = "btn btn-danger btn-sm", onclick = "return confirm('¿Estas seguro que deseas eliminar el elemento?');" })
+                        </td>
                     }
 
                 </tr>

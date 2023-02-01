@@ -1,5 +1,6 @@
 ﻿using MedicamentContext;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using PresentacionFarmaceutica.Models;
 using System.Diagnostics;
 using System.Globalization;
@@ -9,38 +10,25 @@ namespace PresentacionFarmaceutica.Controllers
     public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly MedicamentFile medicamentFile;
+        private readonly PharmaceuticalFormFile pharmaceuticalFormFile;
+        IConfiguration _configuration;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IConfiguration confi)
         {
             _logger = logger;
+            _configuration = confi;
+            medicamentFile = new(_configuration.GetValue<String>("ConnectionStrings:FileConnection") + "Medicamentos.txt");
+            pharmaceuticalFormFile = new(_configuration.GetValue<String>("ConnectionStrings:FileConnection") + "FormaFarmaceutica.txt");
         }
 
         public IActionResult Index(string SearchString)
         {
-            var sesion = GetSessionInfo();
 
-            if (sesion is not null)
-            {
-                if (!string.IsNullOrEmpty(sesion.First()))
-                {
-                    ViewBag.isLogged = true;
-                }
-                else
-                {
-                    ViewBag.isLogged = false;
-                }
-
-            }
-
-
-            MedicamentFile medicamentFile = new(@"C:\Users\MSI-PRO\Downloads\Prueba Desarollador\Prueba Desarollador\Prueba Desarollador\Medicamentos.txt");
             medicamentFile.Read();
-
-            PharmaceuticalFormFile pharmaceuticalFormFile = new(@"C:\Users\MSI-PRO\Downloads\Prueba Desarollador\Prueba Desarollador\Prueba Desarollador\FormaFarmaceutica.txt");
             pharmaceuticalFormFile.Read();
 
             List<DataMedicament>? medicaments = medicamentFile.Elements;
-
             List<DataPharmaceuticalForm>? pharmaceuticalForms = pharmaceuticalFormFile.Elements;
 
             var presentation = from m in medicaments
@@ -63,55 +51,29 @@ namespace PresentacionFarmaceutica.Controllers
                 presentation = presentation.Where(item => item.Nombre == SearchString);
             }
 
+            var sesion = GetSessionInfo();
+
+            if (sesion is not null)
+            {
+                if (!string.IsNullOrEmpty(sesion.First()))
+                {
+                    ViewBag.isLogged = true;
+                }
+                else
+                {
+                    ViewBag.isLogged = false;
+                }
+            }
+
             return View(presentation.ToList());
         }
 
-        [HttpGet]
-        public IActionResult Search(string search)
-        {
-
-            MedicamentFile medicamentFile = new(@"C:\Users\MSI-PRO\Downloads\Prueba Desarollador\Prueba Desarollador\Prueba Desarollador\Medicamentos.txt");
-            medicamentFile.Read();
-
-            PharmaceuticalFormFile pharmaceuticalFormFile = new(@"C:\Users\MSI-PRO\Downloads\Prueba Desarollador\Prueba Desarollador\Prueba Desarollador\FormaFarmaceutica.txt");
-            pharmaceuticalFormFile.Read();
-
-            List<DataMedicament>? medicaments = medicamentFile.Elements;
-
-            List<DataPharmaceuticalForm>? pharmaceuticalForms = pharmaceuticalFormFile.Elements;
-
-            var joinMedicaments = from m in medicaments
-                                  join p in pharmaceuticalForms
-                                  on m.IdFormaFamamaceutica equals p.Id
-                                  select new
-                                  {
-                                      Id = m.Id,
-                                      Nombre = m.Nombre,
-                                      Concentracion = m.Concentracion,
-                                      FormaFamamaceutica = p.Nombre,
-                                      Precio = m.Precio,
-                                      Stock = m.Stock,
-                                      Presentacion = m.Presentacion,
-                                      Habilitado = m.Habilitado,
-                                  };
-
-            var presentation = joinMedicaments.Where
-                (
-                item => item.Nombre == search ||
-                item.Presentacion == search ||
-                item.Concentracion == search
-                );
-
-            return View("Index", presentation);
-        }
 
         [HttpGet]
         public IActionResult EditView(int id)
         {
-            MedicamentFile medicamentFile = new(@"C:\Users\MSI-PRO\Downloads\Prueba Desarollador\Prueba Desarollador\Prueba Desarollador\Medicamentos.txt");
             DataMedicament medicament = medicamentFile.ReadItem(id);
 
-            PharmaceuticalFormFile pharmaceuticalFormFile = new(@"C:\Users\MSI-PRO\Downloads\Prueba Desarollador\Prueba Desarollador\Prueba Desarollador\FormaFarmaceutica.txt");
             pharmaceuticalFormFile.Read();
             List<DataPharmaceuticalForm>? pharmaceuticalForms = pharmaceuticalFormFile.Elements;
 
@@ -127,8 +89,6 @@ namespace PresentacionFarmaceutica.Controllers
         [HttpPut]
         public IActionResult EditItem([FromBody] DtoMedicaments dto)
         {
-
-            MedicamentFile medicamentFile = new(@"C:\Users\MSI-PRO\Downloads\Prueba Desarollador\Prueba Desarollador\Prueba Desarollador\Medicamentos.txt");
 
             DataMedicament mediicament = new()
             {
@@ -150,7 +110,6 @@ namespace PresentacionFarmaceutica.Controllers
         [HttpGet]
         public IActionResult CreateView()
         {
-            PharmaceuticalFormFile pharmaceuticalFormFile = new(@"C:\Users\MSI-PRO\Downloads\Prueba Desarollador\Prueba Desarollador\Prueba Desarollador\FormaFarmaceutica.txt");
             pharmaceuticalFormFile.Read();
             List<DataPharmaceuticalForm>? pharmaceuticalForms = pharmaceuticalFormFile.Elements;
 
@@ -161,8 +120,6 @@ namespace PresentacionFarmaceutica.Controllers
         [HttpPost]
         public IActionResult CreateItem([FromBody] DtoMedicaments dto)
         {
-
-            MedicamentFile medicamentFile = new(@"C:\Users\MSI-PRO\Downloads\Prueba Desarollador\Prueba Desarollador\Prueba Desarollador\Medicamentos.txt");
 
             DataMedicament mediicament = new()
             {
@@ -184,7 +141,6 @@ namespace PresentacionFarmaceutica.Controllers
         [HttpGet]
         public IActionResult DeleteItem(int id)
         {
-            MedicamentFile medicamentFile = new(@"C:\Users\MSI-PRO\Downloads\Prueba Desarollador\Prueba Desarollador\Prueba Desarollador\Medicamentos.txt");
             medicamentFile.Delete(id);
             return Json("Ok");
         }
@@ -204,7 +160,7 @@ namespace PresentacionFarmaceutica.Controllers
         [HttpPost]
         public IActionResult Login([FromBody] DtoLogin login)
         {
-            UserFile usersFile = new(@"C:\Users\MSI-PRO\Downloads\Prueba Desarollador\Prueba Desarollador\Prueba Desarollador\Usuarios.txt");
+            UserFile usersFile = new(_configuration.GetValue<String>("ConnectionStrings:FileConnection") + "Usuarios.txt");
             usersFile.Read();
 
 
