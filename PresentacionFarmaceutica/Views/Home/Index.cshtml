@@ -1,7 +1,7 @@
-﻿@{
+﻿@using PresentacionFarmaceutica.Controllers;
+@{
     ViewData["Title"] = "Inicio";
 }
-
 
 
 <div>
@@ -38,7 +38,10 @@
                 <th scope="col">Stock</th>
                 <th scope="col">Presentación </th>
                 <th scope="col">Habilitado</th>
-                <th scope="col">Acciones</th>
+                @if (ViewBag.isLogged)
+                {
+                    <th scope="col">Acciones</th>
+                }
             </tr>
         </thead>
         <tbody>
@@ -60,10 +63,14 @@
                     {
                         <td>No</td>
                     }
+                    @if (ViewBag.isLogged)
+                    {
                     <td>
                         <a class="btn btn-warning btn-sm" href="@Url.Action("EditView", "Home",new{id = @item.Id})" role="button">Editar</a>
                         @Html.ActionLink("Eliminar", "DeleteItem", new { id = item.Id }, new { @class = "btn btn-danger btn-sm", onclick = "return confirm('¿Estas seguro que deseas eliminar el elemento?');" })
                     </td>
+                    }
+
                 </tr>
             }
         </tbody>

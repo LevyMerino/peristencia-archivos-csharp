@@ -2,10 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using PresentacionFarmaceutica.Models;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace PresentacionFarmaceutica.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
 
@@ -16,6 +17,21 @@ namespace PresentacionFarmaceutica.Controllers
 
         public IActionResult Index(string SearchString)
         {
+            var sesion = GetSessionInfo();
+
+            if (sesion is not null)
+            {
+                if (!string.IsNullOrEmpty(sesion.First()))
+                {
+                    ViewBag.isLogged = true;
+                }
+                else
+                {
+                    ViewBag.isLogged = false;
+                }
+
+            }
+
 
             MedicamentFile medicamentFile = new(@"C:\Users\MSI-PRO\Downloads\Prueba Desarollador\Prueba Desarollador\Prueba Desarollador\Medicamentos.txt");
             medicamentFile.Read();
@@ -178,6 +194,34 @@ namespace PresentacionFarmaceutica.Controllers
             return View();
         }
 
+
+        public IActionResult LoginView()
+        {
+
+            return View("Login");
+        }
+
+        [HttpPost]
+        public IActionResult Login([FromBody] DtoLogin login)
+        {
+            UserFile usersFile = new(@"C:\Users\MSI-PRO\Downloads\Prueba Desarollador\Prueba Desarollador\Prueba Desarollador\Usuarios.txt");
+            usersFile.Read();
+
+
+            var users = usersFile.Elements;
+
+            var userAtFile = users.Find(item => item.Usuario == login.User && item.Password == login.Password);
+
+            if (userAtFile is not null)
+            {
+                SetSessionInfo(userAtFile.Nombre, userAtFile.Usuario);
+                return Json(new { success = true, message = "ok" });
+            }
+            else
+            {
+                return Json(new { success = false, message = "" });
+            }
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

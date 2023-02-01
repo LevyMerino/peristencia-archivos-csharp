@@ -65,11 +65,13 @@ function submitCreate() {
         dataType: 'json',
         contentType: "application/json",
         data: JSON.stringify(data),
-        success: function () {
-
+        success: function (e) {
+            debugger
+            console.log(e);
+            window.location = "/";
         },
         error: function () {
-
+            debugger
         },
         complete: function () {
 
@@ -77,19 +79,33 @@ function submitCreate() {
     });
 }
 
-function submitSearch() {
+function submitLogin() {
+
+    const form = document.querySelector("#formLogin")
+
 
     debugger
 
-    const data = "CETIRIZINA";
+    const data = {
+
+        User: form.user.value,
+        Password: form.pass.value
+    }
+
 
     $.ajax({
-        url: '/Home/Index/' + data,
-        success: function () {
-
+        url: '/Home/Login',
+        type: 'POST',
+        dataType: 'json',
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        success: function (e) {
+            debugger
+            console.log(e);
+            window.location = "/";
         },
         error: function () {
-
+            debugger
         },
         complete: function () {
 
