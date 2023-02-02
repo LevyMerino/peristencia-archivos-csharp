@@ -217,6 +217,45 @@ namespace MedicamentContext
             return presentation;
 
         }
-            
+
+        public int GetPages()
+        {
+
+            float nummerOfElements = 0.0f;
+
+            if (Elements is not null)
+            {
+                nummerOfElements = Elements.Count();
+            }
+
+            int Pages = (int)Math.Ceiling(nummerOfElements / 5);
+
+            return Pages;
+
+        }
+
+        public List<DataMedicament> ReadByPage(int numberOfPage)
+        {
+
+            int end = numberOfPage * 5;
+            int start = end - 5;
+
+            List<DataMedicament> elementsOfPage = new();
+
+            if (Elements is not null)
+            {
+                for (int count = start; count <= end; count++)
+                {
+                    if (count == Elements.Count)
+                    {
+                        break;
+                    }
+
+                     elementsOfPage.Add(Elements[count]);
+                }
+            }
+
+            return elementsOfPage;
+        }
     }
 }

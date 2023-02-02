@@ -10,10 +10,6 @@
     </div>
 
     <form asp-controller="Home" asp-action="Index" method="get">
-@*        <p>
-            Title: <input type="text" name="SearchString" />
-            <input type="submit" value="Filter" />
-        </p>*@
         <div class="row">
             <div class="col-7">
                 <a class="btn btn-primary my-3" href="@Url.Action("CreateView", "Home")" role="button">Agregar nuevo</a>
@@ -21,9 +17,27 @@
             <div class="col-5">
                 <div class="input-group">
                     <input type="search" class="form-control rounded" name="SearchString" placeholder="Puedes filtrar por nombre, presentación, concentración" aria-label="Search" aria-describedby="search-addon" />
-                    <button type="submit"  class="btn btn-outline-primary">Buscar</button>
-                    <button type="submit"  class="btn btn-outline-secondary">Limpiar</button>
+                    <button type="submit" class="btn btn-outline-primary">Buscar</button>
+                    <button type="submit" class="btn btn-outline-secondary">Limpiar</button>
                 </div>
+            </div>
+            <div class="col-1">
+                <select class="form-select" name="Page" aria-label="Default select example" onchange="this.form.submit()">
+                    if(ViewBag.numberOfPage > 0)
+                    {
+                        @for (int c = 1; c <= ViewBag.numberOfPage; c++)
+                        {
+                            if (ViewBag.currentPage == c)
+                            {
+                              <option selected value=@c>@c</option>
+                            }
+                            else
+                            {
+                             <option value=@c>@c</option>                            
+                            }
+                        }
+                    }
+                </select>
             </div>
         </div>
     </form>
@@ -70,7 +84,6 @@
                             @Html.ActionLink("Eliminar", "DeleteItem", new { id = item.Id }, new { @class = "btn btn-danger btn-sm", onclick = "return confirm('¿Estas seguro que deseas eliminar el elemento?');" })
                         </td>
                     }
-
                 </tr>
             }
         </tbody>

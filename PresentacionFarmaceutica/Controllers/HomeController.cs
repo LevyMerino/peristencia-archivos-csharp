@@ -22,14 +22,22 @@ namespace PresentacionFarmaceutica.Controllers
             pharmaceuticalFormFile = new(_configuration.GetValue<String>("ConnectionStrings:FileConnection") + "FormaFarmaceutica.txt");
         }
 
-        public IActionResult Index(string SearchString)
+        public IActionResult Index(string SearchString, int Page)
         {
 
             medicamentFile.Read();
             pharmaceuticalFormFile.Read();
 
-            List<DataMedicament>? medicaments = medicamentFile.Elements;
             List<DataPharmaceuticalForm>? pharmaceuticalForms = pharmaceuticalFormFile.Elements;
+
+            int totalPage = medicamentFile.GetPages();
+            ViewBag.numberOfPage = totalPage;
+
+            if (Page < 1)
+                Page ++;
+
+            ViewBag.currentPage = Page;         
+            List<DataMedicament>? medicaments = medicamentFile.ReadByPage(Page);
 
             var presentation = from m in medicaments
                                join p in pharmaceuticalForms
