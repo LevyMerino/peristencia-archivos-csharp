@@ -56,7 +56,7 @@ namespace PresentacionFarmaceutica.Controllers
 
             if (!String.IsNullOrEmpty(SearchString))
             {
-                presentation = presentation.Where(item => item.Nombre == SearchString);
+                presentation = presentation.Where(item => item.Nombre.ToUpper() == SearchString.ToUpper() || item.Presentacion.ToUpper() == SearchString.ToUpper() || item.Concentracion.ToUpper() == SearchString.ToUpper());
             }
 
             var sesion = GetSessionInfo();
@@ -112,7 +112,7 @@ namespace PresentacionFarmaceutica.Controllers
 
             medicamentFile.Editar(dto.Id, mediicament);
 
-            return Json("Ok");
+            return Json(new { success = true, message = "ok" });
         }
 
         [HttpGet]
@@ -143,14 +143,14 @@ namespace PresentacionFarmaceutica.Controllers
 
             medicamentFile.Agregar(mediicament);
 
-            return Json("Ok");
+            return Json(new { success = true, message = "ok" });
         }
 
         [HttpGet]
         public IActionResult DeleteItem(int id)
         {
             medicamentFile.Delete(id);
-            return Json("Ok");
+            return Redirect("/");
         }
 
         public IActionResult Privacy()

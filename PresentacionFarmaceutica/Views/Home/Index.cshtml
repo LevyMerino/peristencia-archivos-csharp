@@ -5,43 +5,32 @@
 
 
 <div>
+    <div class="d-flex flex-row-reverse">
+        <div class="">
+            <a class="btn btn-link" href="@Url.Action("LoginView", "Home")" role="button">Login</a>
+        </div>
+    </div>
     <div class="text-center">
         <h1 class="display-4">SEPDI</h1>
     </div>
 
     <form asp-controller="Home" asp-action="Index" method="get">
         <div class="row">
-            <div class="col-7">
-                <a class="btn btn-primary my-3" href="@Url.Action("CreateView", "Home")" role="button">Agregar nuevo</a>
-            </div>
+            @if (ViewBag.isLogged)
+            {
+                <div class="col-7">
+                    <a class="btn btn-primary my-3" href="@Url.Action("CreateView", "Home")" role="button">Agregar nuevo</a>
+                </div>
+            }
             <div class="col-5">
                 <div class="input-group">
                     <input type="search" class="form-control rounded" name="SearchString" placeholder="Puedes filtrar por nombre, presentación, concentración" aria-label="Search" aria-describedby="search-addon" />
                     <button type="submit" class="btn btn-outline-primary">Buscar</button>
-                    <button type="submit" class="btn btn-outline-secondary">Limpiar</button>
+                    <button type="submit" class="btn btn-outline-danger">Limpiar</button>
                 </div>
             </div>
-            <div class="col-1">
-                <select class="form-select" name="Page" aria-label="Default select example" onchange="this.form.submit()">
-                    if(ViewBag.numberOfPage > 0)
-                    {
-                        @for (int c = 1; c <= ViewBag.numberOfPage; c++)
-                        {
-                            if (ViewBag.currentPage == c)
-                            {
-                              <option selected value=@c>@c</option>
-                            }
-                            else
-                            {
-                             <option value=@c>@c</option>                            
-                            }
-                        }
-                    }
-                </select>
-            </div>
         </div>
-    </form>
-    <table class="table">
+    <table class="table mb-1">
         <thead>
             <tr>
                 <th scope="col">#</th>
@@ -88,6 +77,25 @@
             }
         </tbody>
     </table>
+        <div class="col-1">
+            <select class="form-select" name="Page" aria-label="Default select example" onchange="this.form.submit()">
+                if(ViewBag.numberOfPage > 0)
+                {
+                @for (int c = 1; c <= ViewBag.numberOfPage; c++)
+                {
+                    if (ViewBag.currentPage == c)
+                    {
+                        <option selected value=@c>@c</option>
+                    }
+                    else
+                    {
+                        <option value=@c>@c</option>
+                    }
+                }
+                }
+            </select>
+        </div>
+    </form>
 </div>
 
 

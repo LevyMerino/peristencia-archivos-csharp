@@ -29,7 +29,8 @@ function submitEdit(id) {
         contentType: "application/json",
         data: JSON.stringify(data),
         success: function () {
-
+            debugger;
+            window.location = "/";
         },
         error: function () {
 
@@ -65,9 +66,7 @@ function submitCreate() {
         dataType: 'json',
         contentType: "application/json",
         data: JSON.stringify(data),
-        success: function (e) {
-            debugger
-            console.log(e);
+        success: function () {
             window.location = "/";
         },
         error: function () {
@@ -99,9 +98,7 @@ function submitLogin() {
         dataType: 'json',
         contentType: "application/json",
         data: JSON.stringify(data),
-        success: function (e) {
-            debugger
-            console.log(e);
+        success: function () {
             window.location = "/";
         },
         error: function () {
