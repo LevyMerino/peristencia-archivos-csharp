@@ -244,7 +244,7 @@ namespace MedicamentContext
 
             if (Elements is not null)
             {
-                for (int count = start; count <= end; count++)
+                for (int count = start; count < end; count++)
                 {
                     if (count == Elements.Count)
                     {
